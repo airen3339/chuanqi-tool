@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
@@ -11,6 +13,8 @@ namespace chuanqi_tool
 {
     public partial class Form1 : Form
     {
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         public Form1()
         {
             InitializeComponent();
@@ -23,45 +27,49 @@ namespace chuanqi_tool
         private void button1_Click(object sender, EventArgs e)
         {
             Button btn = sender as Button;
-            FileDialog dialog = new OpenFileDialog();
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 if (btn.Name == "button1")
-                    this.textBox1.Text = dialog.FileName;
+                    this.textBox1.Text = dialog.SelectedPath;
                 if (btn.Name == "button2")
-                    this.textBox2.Text = dialog.FileName;
+                    this.textBox2.Text = dialog.SelectedPath;
                 if (btn.Name == "button3")
-                    this.textBox3.Text = dialog.FileName;
+                    this.textBox3.Text = dialog.SelectedPath;
                 if (btn.Name == "button4")
-                    this.textBox4.Text = dialog.FileName;
+                    this.textBox4.Text = dialog.SelectedPath;
                 if (btn.Name == "button5")
-                    this.textBox5.Text = dialog.FileName;
+                    this.textBox5.Text = dialog.SelectedPath;
                 if (btn.Name == "button6")
-                    this.textBox6.Text = dialog.FileName;
+                    this.textBox6.Text = dialog.SelectedPath;
                 if (btn.Name == "button7")
-                    this.textBox7.Text = dialog.FileName;
+                    this.textBox7.Text = dialog.SelectedPath;
                 if (btn.Name == "button8")
-                    this.textBox8.Text = dialog.FileName;
+                    this.textBox8.Text = dialog.SelectedPath;
             }
 
         }
 
-        public void Closeprocess(string filename)
+        public void Closeprocess(string path)
         {
+            string process= ConfigurationManager.AppSettings["process"];
+            string[] arr= process.Split('|');
             foreach (Process p in Process.GetProcesses())
             {
                 if (p.MainWindowHandle == IntPtr.Zero) continue;
                 Console.WriteLine(p.MainModule.FileName);
-                if (p.MainModule.FileName == filename)
+                foreach (var item in arr)
                 {
-                    p.Kill();
-                    return;
+                    if (p.MainModule.FileName == (path+item))
+                    {
+                        p.Kill();
+                        return;
+                    }
                 }
+                
             }
         }
-
-
-
+        
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -188,4 +196,5 @@ namespace chuanqi_tool
             }
         }
     }
+   
 }
