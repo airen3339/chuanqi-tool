@@ -63,7 +63,6 @@ namespace chuanqi_tool
                     if (p.MainModule.FileName == (path+item))
                     {
                         p.Kill();
-                        return;
                     }
                 }
                 
