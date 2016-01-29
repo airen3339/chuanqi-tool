@@ -71,6 +71,7 @@
             this.timer6 = new System.Windows.Forms.Timer(this.components);
             this.timer7 = new System.Windows.Forms.Timer(this.components);
             this.timer8 = new System.Windows.Forms.Timer(this.components);
+            this.button9 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -130,7 +131,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(257, 12);
             this.label3.TabIndex = 2;
-            this.label3.Text = "注意：程序要以管理员身份运行，才能关闭进程";
+            this.label3.Text = "注意：程序要以管理员身份运行，才能正常执行";
             // 
             // button2
             // 
@@ -412,6 +413,16 @@
             this.timer8.Interval = 1000;
             this.timer8.Tick += new System.EventHandler(this.timer8_Tick);
             // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(110, 307);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(194, 23);
+            this.button9.TabIndex = 0;
+            this.button9.Text = "测试，点击后执行设计的步骤";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -449,6 +460,7 @@
             this.Controls.Add(this.button4);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button2);
+            this.Controls.Add(this.button9);
             this.Controls.Add(this.btn);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
@@ -502,6 +514,7 @@
         private System.Windows.Forms.Timer timer6;
         private System.Windows.Forms.Timer timer7;
         private System.Windows.Forms.Timer timer8;
+        private System.Windows.Forms.Button button9;
     }
 }
 

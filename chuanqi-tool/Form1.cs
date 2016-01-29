@@ -7,14 +7,16 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace chuanqi_tool
 {
     public partial class Form1 : Form
     {
+
         [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
         public Form1()
         {
             InitializeComponent();
@@ -50,25 +52,60 @@ namespace chuanqi_tool
 
         }
 
-        public void Closeprocess(string path)
+        public void AutoRun(string path)
         {
-            string process= ConfigurationManager.AppSettings["process"];
-            string[] arr= process.Split('|');
+            //1.开始做一个判断
+
+            //            判断指定路径下\GameCenter.exe是否在运行(就是遍历一边当前运行进程中有没有这个路径的，或者你有更好的方法都可以)
+
+            //如果\GameCenter.exe没有在运行，直接执行第三步就行(启动)
+
+            //如果\GameCenter.exe在运行就按下面123步顺序执行(关闭，初始化，启动)
+
             foreach (Process p in Process.GetProcesses())
             {
                 if (p.MainWindowHandle == IntPtr.Zero) continue;
                 Console.WriteLine(p.MainModule.FileName);
-                foreach (var item in arr)
+                string pathexe = string.Format("{0}\\GameCenter.exe", path);
+                if (p.MainModule.FileName == pathexe)
                 {
-                    if (p.MainModule.FileName == (path+item))
-                    {
-                        p.Kill();
-                    }
+                    SetForegroundWindow(p.MainWindowHandle);
+                    Thread.Sleep(1000);
+                    SendKeys.SendWait("%t");
+
+                    SendKeys.SendWait("%y");
+
+                    SendKeys.SendWait("%t");
+
+                    SendKeys.SendWait("%y");
+                    SendKeys.Flush();
+                    Thread.Sleep(30000);
+                    p.Kill();
+
+                    //第2步，初始化
+                    string FileName = string.Format("{0}\\{1}", path, "清理数据正式开区.bat");
+
+                    Process.Start(FileName);
+                    Thread.Sleep(3000);
                 }
-                
+
             }
+            //第3步，启动服务端
+            //找到目录下的GameCenter.exe，运行
+            Process process = new Process();
+            process.StartInfo.FileName = string.Format("{0}\\GameCenter.exe", path);
+            process.StartInfo.UseShellExecute = true;
+            process.StartInfo.WorkingDirectory = path;
+            process.Start();
+            Thread.Sleep(1000);
+            SetForegroundWindow(process.MainWindowHandle);
+            Console.WriteLine(process.MainModule.FileName);
+            SendKeys.SendWait("%s");
+            Thread.Sleep(1000);
+            SendKeys.SendWait("%y");
+            SendKeys.Flush();
         }
-        
+
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -127,7 +164,7 @@ namespace chuanqi_tool
 
             if (this.dateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss") == DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
             {
-                Closeprocess(this.textBox1.Text);
+                AutoRun(this.textBox1.Text);
                 this.timer1.Stop();
             }
         }
@@ -135,7 +172,7 @@ namespace chuanqi_tool
         {
             if (this.dateTimePicker2.Value.ToString("yyyy-MM-dd HH:mm:ss") == DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
             {
-                Closeprocess(this.textBox2.Text);
+                AutoRun(this.textBox2.Text);
                 this.timer2.Stop();
             }
         }
@@ -144,7 +181,7 @@ namespace chuanqi_tool
         {
             if (this.dateTimePicker3.Value.ToString("yyyy-MM-dd HH:mm:ss") == DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
             {
-                Closeprocess(this.textBox3.Text);
+                AutoRun(this.textBox3.Text);
                 this.timer3.Stop();
             }
         }
@@ -153,7 +190,7 @@ namespace chuanqi_tool
         {
             if (this.dateTimePicker4.Value.ToString("yyyy-MM-dd HH:mm:ss") == DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
             {
-                Closeprocess(this.textBox4.Text);
+                AutoRun(this.textBox4.Text);
                 this.timer4.Stop();
             }
         }
@@ -163,7 +200,7 @@ namespace chuanqi_tool
 
             if (this.dateTimePicker5.Value.ToString("yyyy-MM-dd HH:mm:ss") == DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
             {
-                Closeprocess(this.textBox5.Text);
+                AutoRun(this.textBox5.Text);
                 this.timer5.Stop();
             }
         }
@@ -172,7 +209,7 @@ namespace chuanqi_tool
         {
             if (this.dateTimePicker6.Value.ToString("yyyy-MM-dd HH:mm:ss") == DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
             {
-                Closeprocess(this.textBox6.Text);
+                AutoRun(this.textBox6.Text);
                 this.timer6.Stop();
             }
         }
@@ -181,7 +218,7 @@ namespace chuanqi_tool
         {
             if (this.dateTimePicker7.Value.ToString("yyyy-MM-dd HH:mm:ss") == DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
             {
-                Closeprocess(this.textBox7.Text);
+                AutoRun(this.textBox7.Text);
                 this.timer7.Stop();
             }
         }
@@ -190,10 +227,22 @@ namespace chuanqi_tool
         {
             if (this.dateTimePicker8.Value.ToString("yyyy-MM-dd HH:mm:ss") == DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
             {
-                Closeprocess(this.textBox8.Text);
+                AutoRun(this.textBox8.Text);
                 this.timer8.Stop();
             }
         }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            if (this.textBox1.Text.Trim() == string.Empty)
+            {
+                MessageBox.Show("请选择第一个文本的路径");
+                return;
+            }
+            AutoRun(this.textBox1.Text);
+        }
+
+
     }
-   
+
 }

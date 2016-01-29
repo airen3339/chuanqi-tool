@@ -33,9 +33,44 @@
 
 
 
-第2步，复制初始文件
+第2步，初始化
 
-然后复制下面的初始文件到目录
+;备份测试数据
+
+xCopy Config.ini   	      		数据备份\  /y  
+xCopy Mir200\!SetUp.txt   	      	数据备份\Mir200\  /y 
+xCopy DBServer\FDB   	      		数据备份\DBServer\FDB\ /y   /e
+xCopy LoginSrv\IDDB                	数据备份\LoginSrv\IDDB\ /y  /e
+xCopy Mir200\GuildBase 	      		数据备份\Mir200\GuildBase\ /y  /e
+xCopy Mir200\Envir\Market_upg  		数据备份\Mir200\Envir\Market_upg\ /y  /e
+xCopy Mir200\Envir\Market_saved	      	数据备份\Mir200\Envir\Market_saved\ /y  /e
+xCopy Mir200\Envir\Market_prices  	数据备份\Mir200\Envir\Market_prices\ /y  /e
+xCopy Mir200\Envir\Market_SellOff	数据备份\Mir200\Envir\Market_SellOff\ /y  /e
+xCopy Mir200\Envir\Market_Storage  	数据备份\Mir200\Envir\Market_Storage\ /y  /e
+xCopy Mir200\Envir\UserData 	      	数据备份\Mir200\Envir\UserData\ /y  /e
+xCopy Mir200\Envir\QuestDiary 		数据备份\Mir200\Envir\QuestDiary\ /y  /e
+
+;清理测试数据
+
+DEL DBServer\FDB\. /Q
+DEL LoginSrv\IDDB\. /Q
+DEL LogServer\BaseDir\. /S /Q
+DEL LoginSrv\ChrLog\. /S /Q
+DEL LoginSrv\CountLog\. /S /Q
+DEL Mir200\GuildBase\Guilds\. /Q
+DEL Mir200\Envir\Market_upg\. /Q
+DEL Mir200\Envir\Market_saved\. /Q
+DEL Mir200\Envir\Market_prices\. /Q
+DEL Mir200\Envir\Market_SellOff\. /Q
+DEL Mir200\Envir\Market_Storage\. /Q
+DEL Mir200\ConLog\. /Q
+DEL Mir200\Log\. /Q
+DEL Mir200\Envir\UserData\BaiTan\. /Q
+DEL Mir200\Envir\UserData\YBDeal\. /Q
+DEL Mir200\Envir\LevelOrder\. /Q
+
+
+复制初始文件
 
 \12345    \   ;复制文件夹下所有子目录
 
