@@ -1,0 +1,62 @@
+
+
+
+开始做一个判断
+
+判断指定路径下\GameCenter.exe是否在运行(就是遍历一边当前运行进程中有没有这个路径的，或者你有更好的方法都可以)
+
+如果\GameCenter.exe没有在运行，直接执行第三步就行(启动)
+
+如果\GameCenter.exe在运行就按下面123步顺序执行(关闭，初始化，启动)
+
+
+第1步，关闭服务端
+
+如果能选择到指定路径的程序并选择为当前程序（就类似手动点下一个程序让他窗口在最前面接收键盘按键）
+就选中
+\GameCenter.exe  
+延迟一秒 按ALT+T 
+延迟一秒 按ALT+Y
+延迟30秒 通过GameCenter.exe关闭所有程序需要较长时间
+
+如果没有上面的功能就按下面顺序依次关闭进程
+
+关闭\LoginGate\LoginGate.exe 		;延迟1秒
+关闭\SelGate\SelGate.exe     		;延迟1秒
+关闭\RunGate\RunGate.exe    		;延迟1秒
+关闭\Mir200\M2Server.exe     		;延迟8秒，这个M2是主引擎，关闭会需要时间。关闭函数如果有参数可以选最好让他自己关闭，不要强制瞬间关闭。它关闭的时候要保存数据的,延迟8秒再检测一次如果没有关闭再强制关闭。
+关闭\LogServer\LogDataServer.exe	;延迟1秒
+关闭\LoginSrv\LoginSrv.exe   		;延迟1秒
+关闭\DBServer\DBServer.exe   		;延迟2秒，关闭函数如果有参数可以选最好让他自己关闭，不要强制瞬间关闭。延迟2秒再检测一次如果没有关闭再强制关闭。
+关闭\GameCenter.exe          		;延迟1秒
+
+
+
+
+第2步，复制初始文件
+
+然后复制下面的初始文件到目录
+
+\12345    \   ;复制文件夹下所有子目录
+
+
+
+
+第3步，启动服务端
+
+如果函数启动一个程序后程序是处于最前窗口的（也就是他能接收键盘按键）
+启动控制台程序
+\GameCenter.exe
+延迟1秒 键盘按下ALT+S
+延迟1秒 键盘按下ALT+Y
+
+如果不能上面这样就按下面顺序依次运行程序
+运行\GameCenter.exe			;延迟1秒
+运行\DBServer\DBServer.exe		;延迟1秒
+运行\LoginSrv\LoginSrv.exe		;延迟1秒
+运行\LogServer\LogDataServer.exe	;延迟1秒
+运行\Mir200\M2Server.exe		;延迟30秒，主引擎启动需要较长时间
+运行\RunGate\RunGate.exe		;延迟1秒
+运行\SelGate\SelGate.exe		;延迟1秒
+运行\LoginGate\LoginGate.exe		;延迟1秒
+
