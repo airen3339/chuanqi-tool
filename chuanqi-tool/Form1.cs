@@ -79,13 +79,17 @@ namespace chuanqi_tool
 
                     SendKeys.SendWait("%y");
                     SendKeys.Flush();
-                    Thread.Sleep(30000);
+                    Thread.Sleep(3000);
                     p.Kill();
 
+                    Process pro = new Process();
                     //第2步，初始化
                     string FileName = string.Format("{0}\\{1}", path, "清理数据正式开区.bat");
 
-                    Process.Start(FileName);
+                    pro.StartInfo.FileName = FileName;
+                    pro.StartInfo.WorkingDirectory = path;
+                    pro.Start();
+                    pro.WaitForExit();
                     Thread.Sleep(3000);
                 }
 
