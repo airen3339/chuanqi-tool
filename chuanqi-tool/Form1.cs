@@ -54,6 +54,7 @@ namespace chuanqi_tool
 
         public void AutoRun(string path)
         {
+            this.Cursor = Cursors.WaitCursor;
             //1.开始做一个判断
 
             //            判断指定路径下\GameCenter.exe是否在运行(就是遍历一边当前运行进程中有没有这个路径的，或者你有更好的方法都可以)
@@ -65,21 +66,26 @@ namespace chuanqi_tool
             foreach (Process p in Process.GetProcesses())
             {
                 if (p.MainWindowHandle == IntPtr.Zero) continue;
-                Console.WriteLine(p.MainModule.FileName);
+                try
+                {
+                    Console.WriteLine(p.MainModule.FileName);
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+                
                 string pathexe = string.Format("{0}\\GameCenter.exe", path);
                 if (p.MainModule.FileName == pathexe)
                 {
                     SetForegroundWindow(p.MainWindowHandle);
+                   
                     Thread.Sleep(1000);
                     SendKeys.SendWait("%t");
-
-                    SendKeys.SendWait("%y");
-
-                    SendKeys.SendWait("%t");
-
+                    Thread.Sleep(1000);
                     SendKeys.SendWait("%y");
                     SendKeys.Flush();
-                    Thread.Sleep(3000);
+                    Thread.Sleep(15000);
                     p.Kill();
 
                     Process pro = new Process();
@@ -108,6 +114,7 @@ namespace chuanqi_tool
             Thread.Sleep(1000);
             SendKeys.SendWait("%y");
             SendKeys.Flush();
+            this.Cursor = Cursors.Default;
         }
 
 
