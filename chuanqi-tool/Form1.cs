@@ -86,7 +86,7 @@ namespace chuanqi_tool
                     Thread.Sleep(1000);
                     SendKeys.SendWait("%y");
                     SendKeys.Flush();
-                    Thread.Sleep(15000);
+                    Thread.Sleep(20000);
                     //检查相关进程是否都已经关闭，如果没有强制关闭
                     this.CheckClose(p, path);
                     p.Kill();
@@ -114,6 +114,7 @@ namespace chuanqi_tool
             Thread.Sleep(1000);
             SetForegroundWindow(process.MainWindowHandle);
             SendKeys.SendWait("%s");
+            Thread.Sleep(1000);
             SendKeys.SendWait("%y");
             SendKeys.Flush();
             this.CheckOpen(process, path);
