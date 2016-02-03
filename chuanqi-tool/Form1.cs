@@ -88,7 +88,15 @@ namespace chuanqi_tool
                     SendKeys.Flush();
                     Thread.Sleep(20000);
                     //检查相关进程是否都已经关闭，如果没有强制关闭
-                    this.CheckClose(p, path);
+                    if (this.CheckClose(p, path))
+                    {
+                        log.Info("正常关闭" + p.MainModule.FileName + "的子进程");
+                    }
+                    else
+                    {
+                        log.Info("第二次尝试发送按键进行关闭");
+                        this.CheckClose(p, path);
+                    }
                     p.Kill();
                     Process pro = new Process();
                     //第2步，初始化
@@ -98,7 +106,7 @@ namespace chuanqi_tool
                     pro.StartInfo.WorkingDirectory = path;
                     pro.Start();
                     pro.WaitForExit();
-                    Thread.Sleep(3000);
+                    Thread.Sleep(10000);
                 }
 
             }
@@ -115,13 +123,23 @@ namespace chuanqi_tool
             SetForegroundWindow(process.MainWindowHandle);
             SendKeys.SendWait("%s");
             Thread.Sleep(1000);
+            SetForegroundWindow(process.MainWindowHandle);
             SendKeys.SendWait("%y");
             SendKeys.Flush();
-            this.CheckOpen(process, path);
+            Thread.Sleep(20000);
+            if (this.CheckOpen(process, path))
+            {
+                log.Info("正常开启" + path);
+            }
+            else
+            {
+                log.Info("第二次检查是否正常启动");
+                this.CheckOpen(process, path);
+            }
             this.Cursor = Cursors.Default;
         }
 
-        private void CheckOpen(Process process, string path)
+        private bool CheckOpen(Process process, string path)
         {
             log.Info("检查是否正常启动进程" + string.Format("{0}\\GameCenter.exe", path));
             foreach (Process p in Process.GetProcesses())
@@ -140,20 +158,26 @@ namespace chuanqi_tool
                 {
                     //找到目录下的进程，证明已通过按键去打开子进程退出
                     log.Info("查到已运行进程：" + pathexe);
-                    return;
+                    return true;
                 }
             }
             //未找到应用，重新发送命令
-            log.Info("未找到相关子进程，重新发送命令"+path);
+            log.Info("未找到相关子进程，重新发送按键消息,控制台：");
+            log.Info("控制台进程" + process.MainModule.FileName+"前置");
             SetForegroundWindow(process.MainWindowHandle);
-
+            log.Info("开始发送ALT+S");
             SendKeys.SendWait("%s");
+            Thread.Sleep(1000);
+            log.Info("控制台进程" + process.MainModule.FileName + "前置");
+            log.Info("开始发送ALT+Y");
+            SetForegroundWindow(process.MainWindowHandle);
             SendKeys.SendWait("%y");
             SendKeys.Flush();
-            Thread.Sleep(15000);
+            Thread.Sleep(20000);
+            return false;
         }
 
-        private void CheckClose(Process process, string path)
+        private bool CheckClose(Process process, string path)
         {
             string strpro = ConfigurationManager.AppSettings["process"];
             string[] arr = strpro.Split('|');
@@ -170,22 +194,28 @@ namespace chuanqi_tool
                     continue;
                 }
                 string proName = p.MainModule.FileName;
-                //找到目录下的进程，证明没有通过按键去关闭，强制关闭
+                //找到目录下的进程，证明没有通过按键去关闭，重新发送按键关闭
                 foreach (var item in arr)
                 {
                     string fullpath = (path + item);
                     if (proName.ToLower() == fullpath.ToLower())
                     {
-                        log.Info(string.Format("找到进程{0},强制关闭", proName));
-                        p.Kill();
-                        if (proName.Contains("M2Server.exe"))
-                            Thread.Sleep(8000);
-                        else
-                            Thread.Sleep(1000);
+                        log.Info(string.Format("找到进程{0},发送按键进行关闭", proName));
+
+                        log.Info("控制台进程名：" + process.MainModule.FileName);
+                        log.Info("开始发送ALT+T");
+                        SetForegroundWindow(process.MainWindowHandle);
+                        SendKeys.SendWait("%t");
+                        Thread.Sleep(1000);
+                        log.Info("开始发送ALT+Y");
+                        SetForegroundWindow(process.MainWindowHandle);
+                        SendKeys.SendWait("%y");
+                        SendKeys.Flush();
+                        return false;
                     }
                 }
-
             }
+            return true;
         }
         private void button3_Click(object sender, EventArgs e)
         {
@@ -345,7 +375,7 @@ namespace chuanqi_tool
 
         private void CloseProcess(string path)
         {
-            string exe = @"\Mir200\M2Server.exe|\DBServer\DBServer.exe|\GameCenter.exe|\LogServer\\LogDataServer.exe|\LoginSrv\LoginSrv.exe|\RunGate\RunGate.exe|\SelGate\SelGate.exe|GameCenter.exe";
+            
 
         }
 
